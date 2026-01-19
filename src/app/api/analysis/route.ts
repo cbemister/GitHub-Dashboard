@@ -9,6 +9,7 @@ import {
   detectThemes,
   generateFeatureAudit,
   getTechStackByCategory,
+  getThemesByCategory,
 } from "@/lib/analysis/grouping";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export async function GET() {
         techStack: [],
         techStackByCategory: {},
         themes: [],
+        themesByCategory: { technical: [], application: [] },
         featureAudit: [],
         summary: {
           totalRepos: 0,
@@ -37,6 +39,7 @@ export async function GET() {
           topics: 0,
           technologies: 0,
           themes: 0,
+          appThemes: 0,
         },
       });
     }
@@ -47,6 +50,7 @@ export async function GET() {
     const techStack = detectTechStack(repos);
     const techStackByCategory = getTechStackByCategory(techStack);
     const themes = detectThemes(repos);
+    const themesByCategory = getThemesByCategory(themes);
     const featureAudit = generateFeatureAudit(repos);
 
     // Summary stats
@@ -56,6 +60,7 @@ export async function GET() {
       topics: topicGroups.length,
       technologies: techStack.length,
       themes: themes.length,
+      appThemes: themesByCategory.application.length,
     };
 
     return NextResponse.json({
@@ -64,6 +69,7 @@ export async function GET() {
       techStack: techStack.slice(0, 30), // Top 30 technologies
       techStackByCategory,
       themes,
+      themesByCategory,
       featureAudit,
       summary,
     });

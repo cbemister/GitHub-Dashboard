@@ -11,6 +11,62 @@
   color: var(--color-foreground-secondary);
 }
 
+.tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--spacing-3);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-foreground-secondary);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab:hover {
+  color: var(--color-foreground);
+  background: var(--color-background-secondary);
+}
+
+.tab.active {
+  color: var(--color-primary);
+  background: var(--color-primary-muted);
+  border-color: var(--color-primary);
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+}
+
+.categoryDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-foreground-secondary);
+  margin: 0 0 var(--spacing-4);
+  padding: var(--spacing-3);
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-md);
+}
+
+.noResults {
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--color-foreground-secondary);
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-md);
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -20,6 +76,12 @@
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -37,6 +99,24 @@
 .card.expanded {
   border-color: var(--color-primary);
   grid-column: 1 / -1;
+}
+
+/* Application theme cards get a colored left border */
+.card.application {
+  border-left: 3px solid var(--color-success);
+}
+
+.card.application:hover {
+  border-left-color: var(--color-success);
+}
+
+/* Technical theme cards get a different colored left border */
+.card.technical {
+  border-left: 3px solid var(--color-info);
+}
+
+.card.technical:hover {
+  border-left-color: var(--color-info);
 }
 
 .header {
@@ -75,6 +155,16 @@
   color: var(--color-primary);
   background: var(--color-primary-muted);
   border-radius: var(--radius-full);
+}
+
+.card.application .count {
+  color: var(--color-success);
+  background: var(--color-success-muted);
+}
+
+.card.technical .count {
+  color: var(--color-info);
+  background: var(--color-info-muted);
 }
 
 .description {

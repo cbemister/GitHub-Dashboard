@@ -46,6 +46,7 @@ export interface RepoFeature {
 export interface ThemeCluster {
   name: string;
   description: string;
+  category: "technical" | "application";
   repositories: Repository[];
   keywords: string[];
 }
@@ -97,38 +98,164 @@ const techPatterns: Record<string, { pattern: RegExp; category: TechStackItem["c
 };
 
 // Theme patterns to detect project purposes
-const themePatterns: Record<string, { keywords: RegExp[]; description: string }> = {
+const themePatterns: Record<string, { keywords: RegExp[]; description: string; category: "technical" | "application" }> = {
+  // Technical themes
   "Web Applications": {
     keywords: [/\bweb\b/i, /\bwebsite\b/i, /\bfrontend\b/i, /\bfull.?stack\b/i],
     description: "Web-based applications and sites",
+    category: "technical",
   },
   "CLI Tools": {
     keywords: [/\bcli\b/i, /\bcommand.?line\b/i, /\bterminal\b/i, /\bconsole\b/i],
     description: "Command-line interfaces and tools",
+    category: "technical",
   },
   "Libraries & Packages": {
     keywords: [/\blib\b/i, /\blibrary\b/i, /\bpackage\b/i, /\bmodule\b/i, /\bsdk\b/i],
     description: "Reusable libraries and packages",
+    category: "technical",
   },
   "APIs & Services": {
     keywords: [/\bapi\b/i, /\bservice\b/i, /\bmicroservice\b/i, /\bbackend\b/i],
     description: "API services and backends",
+    category: "technical",
   },
   "Data & Analytics": {
     keywords: [/\bdata\b/i, /\banalytics\b/i, /\bml\b/i, /\bmachine.?learning\b/i, /\bai\b/i],
     description: "Data processing and analytics",
+    category: "technical",
   },
   "DevOps & Infrastructure": {
     keywords: [/\bdevops\b/i, /\binfra\b/i, /\bdeploy\b/i, /\bci\b/i, /\bcd\b/i, /\bdocker\b/i],
     description: "DevOps and infrastructure tooling",
+    category: "technical",
   },
   "Learning & Experiments": {
     keywords: [/\blearn\b/i, /\btutorial\b/i, /\bexperiment\b/i, /\bplayground\b/i, /\bdemo\b/i],
     description: "Learning projects and experiments",
+    category: "technical",
   },
   "Templates & Starters": {
     keywords: [/\btemplate\b/i, /\bstarter\b/i, /\bboilerplate\b/i, /\bscaffold\b/i],
     description: "Project templates and starters",
+    category: "technical",
+  },
+  "Mobile Apps": {
+    keywords: [/\bmobile\b/i, /\bios\b/i, /\bandroid\b/i, /\breact.?native\b/i, /\bflutter\b/i, /\bapp\b/i],
+    description: "Mobile applications for iOS and Android",
+    category: "technical",
+  },
+  "Browser Extensions": {
+    keywords: [/\bextension\b/i, /\bchrome\b/i, /\bfirefox\b/i, /\bbrowser\b/i, /\baddon\b/i],
+    description: "Browser extensions and add-ons",
+    category: "technical",
+  },
+  "Games": {
+    keywords: [/\bgame\b/i, /\bgaming\b/i, /\bunity\b/i, /\bgodot\b/i, /\bpygame\b/i, /\bphaser\b/i],
+    description: "Games and game engines",
+    category: "technical",
+  },
+
+  // Application domain themes
+  "Finance & Budgeting": {
+    keywords: [/\bfinance\b/i, /\bbudget\b/i, /\bexpense\b/i, /\bmoney\b/i, /\binvoice\b/i, /\baccounting\b/i, /\bbank\b/i, /\bpayment\b/i, /\bcrypto\b/i, /\btrading\b/i, /\bstock\b/i, /\binvest\b/i],
+    description: "Finance, budgeting, and money management apps",
+    category: "application",
+  },
+  "Food & Meal Planning": {
+    keywords: [/\bmeal\b/i, /\brecipe\b/i, /\bfood\b/i, /\bcooking\b/i, /\bkitchen\b/i, /\bdiet\b/i, /\bnutrition\b/i, /\bgrocery\b/i, /\brestaurant\b/i, /\bmenu\b/i],
+    description: "Meal planning, recipes, and food-related apps",
+    category: "application",
+  },
+  "Resume & Career": {
+    keywords: [/\bresume\b/i, /\bcv\b/i, /\bportfolio\b/i, /\bjob\b/i, /\bcareer\b/i, /\bhiring\b/i, /\brecruit\b/i, /\binterview\b/i, /\blinkedin\b/i],
+    description: "Resume builders, portfolios, and career tools",
+    category: "application",
+  },
+  "Health & Fitness": {
+    keywords: [/\bhealth\b/i, /\bfitness\b/i, /\bworkout\b/i, /\bexercise\b/i, /\bgym\b/i, /\bmedical\b/i, /\bwellness\b/i, /\bsleep\b/i, /\bmeditation\b/i, /\byoga\b/i, /\bcalorie\b/i],
+    description: "Health tracking, fitness, and wellness apps",
+    category: "application",
+  },
+  "Productivity & Tasks": {
+    keywords: [/\btodo\b/i, /\btask\b/i, /\bproductivity\b/i, /\bpomodoro\b/i, /\bkanban\b/i, /\bproject.?management\b/i, /\btrello\b/i, /\bnotes?\b/i, /\breminder\b/i, /\bcalendar\b/i, /\bschedule\b/i],
+    description: "Task management and productivity tools",
+    category: "application",
+  },
+  "E-commerce & Shopping": {
+    keywords: [/\becommerce\b/i, /\be-commerce\b/i, /\bshop\b/i, /\bstore\b/i, /\bcart\b/i, /\bcheckout\b/i, /\bproduct\b/i, /\binventory\b/i, /\bmarketplace\b/i],
+    description: "E-commerce platforms and shopping apps",
+    category: "application",
+  },
+  "Social & Communication": {
+    keywords: [/\bsocial\b/i, /\bchat\b/i, /\bmessag\b/i, /\bforum\b/i, /\bcommunity\b/i, /\btwitter\b/i, /\bdiscord\b/i, /\bslack\b/i, /\bfeed\b/i, /\bpost\b/i],
+    description: "Social networks and communication tools",
+    category: "application",
+  },
+  "Education & Learning": {
+    keywords: [/\beducat\b/i, /\bcourse\b/i, /\bquiz\b/i, /\bflashcard\b/i, /\bstudy\b/i, /\bschool\b/i, /\bstudent\b/i, /\bteach\b/i, /\blms\b/i, /\belearning\b/i],
+    description: "Educational platforms and learning tools",
+    category: "application",
+  },
+  "Media & Entertainment": {
+    keywords: [/\bmedia\b/i, /\bvideo\b/i, /\bmusic\b/i, /\bpodcast\b/i, /\bstream\b/i, /\bplayer\b/i, /\bplaylist\b/i, /\bspotify\b/i, /\byoutube\b/i, /\bnetflix\b/i],
+    description: "Media streaming and entertainment apps",
+    category: "application",
+  },
+  "Travel & Location": {
+    keywords: [/\btravel\b/i, /\bmap\b/i, /\blocation\b/i, /\bgeo\b/i, /\bgps\b/i, /\bweather\b/i, /\bflight\b/i, /\bhotel\b/i, /\bbooking\b/i, /\btourism\b/i],
+    description: "Travel planning and location-based apps",
+    category: "application",
+  },
+  "Real Estate & Property": {
+    keywords: [/\breal.?estate\b/i, /\bproperty\b/i, /\bhousing\b/i, /\brent\b/i, /\bmortgage\b/i, /\blisting\b/i, /\bapartment\b/i, /\bhome\b/i],
+    description: "Real estate and property management",
+    category: "application",
+  },
+  "CRM & Sales": {
+    keywords: [/\bcrm\b/i, /\bsales\b/i, /\bcustomer\b/i, /\blead\b/i, /\bpipeline\b/i, /\bcontact\b/i, /\bdeal\b/i, /\bprospect\b/i],
+    description: "Customer relationship and sales management",
+    category: "application",
+  },
+  "Content & Blogging": {
+    keywords: [/\bblog\b/i, /\bcms\b/i, /\bcontent\b/i, /\bmarkdown\b/i, /\bwriting\b/i, /\barticle\b/i, /\bpublish\b/i, /\bwordpress\b/i],
+    description: "Blogging and content management systems",
+    category: "application",
+  },
+  "Authentication & Security": {
+    keywords: [/\bauth\b/i, /\blogin\b/i, /\bpassword\b/i, /\bsecurity\b/i, /\boauth\b/i, /\bjwt\b/i, /\bencrypt\b/i, /\b2fa\b/i, /\bsso\b/i],
+    description: "Authentication and security tools",
+    category: "application",
+  },
+  "Automation & Bots": {
+    keywords: [/\bbot\b/i, /\bautomation\b/i, /\bscraper\b/i, /\bcrawler\b/i, /\bworkflow\b/i, /\bzapier\b/i, /\bscheduler\b/i, /\bcron\b/i],
+    description: "Automation tools and bots",
+    category: "application",
+  },
+  "Dashboard & Admin": {
+    keywords: [/\bdashboard\b/i, /\badmin\b/i, /\bpanel\b/i, /\bbackoffice\b/i, /\bmanagement\b/i, /\bmonitor\b/i, /\bmetric\b/i],
+    description: "Admin panels and dashboards",
+    category: "application",
+  },
+  "File & Document": {
+    keywords: [/\bfile\b/i, /\bdocument\b/i, /\bpdf\b/i, /\bupload\b/i, /\bstorage\b/i, /\bdropbox\b/i, /\bdrive\b/i, /\bconvert\b/i],
+    description: "File management and document tools",
+    category: "application",
+  },
+  "Booking & Scheduling": {
+    keywords: [/\bbooking\b/i, /\bappointment\b/i, /\breservation\b/i, /\bschedule\b/i, /\bcalendly\b/i, /\bavailability\b/i, /\bslot\b/i],
+    description: "Booking and appointment scheduling",
+    category: "application",
+  },
+  "Survey & Forms": {
+    keywords: [/\bsurvey\b/i, /\bform\b/i, /\bquestionnaire\b/i, /\bpoll\b/i, /\bfeedback\b/i, /\bresponse\b/i, /\btypeform\b/i],
+    description: "Surveys, forms, and feedback collection",
+    category: "application",
+  },
+  "Email & Newsletter": {
+    keywords: [/\bemail\b/i, /\bmail\b/i, /\bnewsletter\b/i, /\binbox\b/i, /\bsmtp\b/i, /\bmailchimp\b/i, /\bsubscrib\b/i],
+    description: "Email clients and newsletter tools",
+    category: "application",
   },
 };
 
@@ -240,7 +367,7 @@ export function detectTechStack(repositories: Repository[]): TechStackItem[] {
 export function detectThemes(repositories: Repository[]): ThemeCluster[] {
   const themes: ThemeCluster[] = [];
 
-  for (const [themeName, { keywords, description }] of Object.entries(themePatterns)) {
+  for (const [themeName, { keywords, description, category }] of Object.entries(themePatterns)) {
     const matchingRepos: Repository[] = [];
     const matchedKeywords: Set<string> = new Set();
 
@@ -265,6 +392,7 @@ export function detectThemes(repositories: Repository[]): ThemeCluster[] {
       themes.push({
         name: themeName,
         description,
+        category,
         repositories: matchingRepos,
         keywords: Array.from(matchedKeywords).slice(0, 5),
       });
@@ -272,6 +400,16 @@ export function detectThemes(repositories: Repository[]): ThemeCluster[] {
   }
 
   return themes.sort((a, b) => b.repositories.length - a.repositories.length);
+}
+
+/**
+ * Get themes grouped by category
+ */
+export function getThemesByCategory(themes: ThemeCluster[]): { technical: ThemeCluster[]; application: ThemeCluster[] } {
+  return {
+    technical: themes.filter(t => t.category === "technical"),
+    application: themes.filter(t => t.category === "application"),
+  };
 }
 
 /**

@@ -33,6 +33,7 @@ interface AnalysisData {
   themes: Array<{
     name: string;
     description: string;
+    category: "technical" | "application";
     repositories: Array<{
       id: number;
       name: string;
@@ -41,6 +42,32 @@ interface AnalysisData {
     }>;
     keywords: string[];
   }>;
+  themesByCategory: {
+    technical: Array<{
+      name: string;
+      description: string;
+      category: "technical" | "application";
+      repositories: Array<{
+        id: number;
+        name: string;
+        fullName: string;
+        description: string | null;
+      }>;
+      keywords: string[];
+    }>;
+    application: Array<{
+      name: string;
+      description: string;
+      category: "technical" | "application";
+      repositories: Array<{
+        id: number;
+        name: string;
+        fullName: string;
+        description: string | null;
+      }>;
+      keywords: string[];
+    }>;
+  };
   featureAudit: Array<{
     repoId: number;
     repoName: string;
@@ -67,6 +94,7 @@ interface AnalysisData {
     topics: number;
     technologies: number;
     themes: number;
+    appThemes: number;
   };
 }
 
@@ -167,12 +195,12 @@ export function AnalysisContent() {
           <div className={styles.statLabel}>Languages</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statNumber}>{data.summary.topics}</div>
-          <div className={styles.statLabel}>Topics</div>
-        </div>
-        <div className={styles.statCard}>
           <div className={styles.statNumber}>{data.summary.technologies}</div>
           <div className={styles.statLabel}>Technologies</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNumber}>{data.summary.appThemes}</div>
+          <div className={styles.statLabel}>App Types</div>
         </div>
       </div>
 
@@ -216,9 +244,9 @@ export function AnalysisContent() {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>Project Themes</h3>
             <p className={styles.sectionDesc}>
-              Common themes and patterns detected across your repositories.
+              Discover similar apps and common patterns across your repositories.
             </p>
-            <ThemeCluster themes={data.themes} />
+            <ThemeCluster themes={data.themes} themesByCategory={data.themesByCategory} />
           </div>
         )}
 
