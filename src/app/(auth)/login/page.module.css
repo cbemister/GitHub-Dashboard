@@ -59,8 +59,28 @@
   text-decoration: none;
 }
 
+.error {
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  background: var(--color-danger-muted);
+  color: var(--color-danger);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
 .permissions {
   margin-top: var(--spacing-4);
   font-size: var(--font-size-xs);
   color: var(--color-foreground-muted);
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: var(--spacing-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-foreground-secondary);
+}
+
+.backLink:hover {
+  color: var(--color-primary);
 }

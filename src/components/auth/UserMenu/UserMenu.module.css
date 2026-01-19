@@ -1,0 +1,111 @@
+.container {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.trigger:hover {
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-muted);
+}
+
+.avatar {
+  border-radius: var(--radius-full);
+}
+
+.avatarPlaceholder {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.username {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+@media (max-width: 640px) {
+  .username {
+    display: none;
+  }
+}
+
+.chevron {
+  color: var(--color-foreground-secondary);
+  transition: transform var(--transition-fast);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-1));
+  right: 0;
+  min-width: 200px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+}
+
+.dropdownHeader {
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+.dropdownUsername {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--color-border-muted);
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-4);
+  background: transparent;
+  border: none;
+  color: var(--color-foreground);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.dropdownItem:hover {
+  background: var(--color-background-secondary);
+  text-decoration: none;
+}
+
+.dropdownItem svg {
+  color: var(--color-foreground-secondary);
+}

@@ -1,7 +1,22 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 
-export default function LoginPage() {
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_APP_URL + "/api/auth/callback")}&scope=repo,read:user,user:email`;
+interface LoginPageProps {
+  searchParams: Promise<{ error?: string; redirect?: string }>;
+}
+
+const errorMessages: Record<string, string> = {
+  invalid_state: "Authentication failed. Please try again.",
+  no_code: "Authentication was cancelled.",
+  token_exchange_failed: "Failed to authenticate with GitHub.",
+  auth_failed: "An error occurred during authentication.",
+  access_denied: "Access was denied. Please try again.",
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const error = params.error;
+  const errorMessage = error ? errorMessages[error] || "An error occurred." : null;
 
   return (
     <main className={styles.main}>
@@ -21,7 +36,14 @@ export default function LoginPage() {
         <p className={styles.description}>
           Connect your GitHub account to review and manage your repositories.
         </p>
-        <a href={githubAuthUrl} className={styles.button}>
+
+        {errorMessage && (
+          <div className={styles.error}>
+            {errorMessage}
+          </div>
+        )}
+
+        <a href="/api/auth/github" className={styles.button}>
           <svg
             height="20"
             viewBox="0 0 16 16"
@@ -36,6 +58,9 @@ export default function LoginPage() {
         <p className={styles.permissions}>
           We&apos;ll request access to your repositories to sync their status.
         </p>
+        <Link href="/" className={styles.backLink}>
+          Back to home
+        </Link>
       </div>
     </main>
   );
