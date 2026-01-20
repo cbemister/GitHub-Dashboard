@@ -82,11 +82,33 @@ export async function GET() {
         language: r.language,
       }));
 
+    // Get active projects (recently updated, sorted by push date)
+    const activeProjects = repos
+      .filter((r) => r.status === "active" || r.status === "maintained")
+      .sort((a, b) => {
+        const dateA = a.pushedAt ? new Date(a.pushedAt).getTime() : 0;
+        const dateB = b.pushedAt ? new Date(b.pushedAt).getTime() : 0;
+        return dateB - dateA;
+      })
+      .slice(0, 8)
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        fullName: r.fullName,
+        description: r.description,
+        status: r.status,
+        language: r.language,
+        stargazersCount: r.stargazersCount,
+        pushedAt: r.pushedAt,
+        htmlUrl: r.htmlUrl,
+      }));
+
     return NextResponse.json({
       stats,
       statusDistribution,
       languageDistribution,
       topPriorityRepos,
+      activeProjects,
     });
   } catch (error) {
     console.error("Error fetching stats:", error);

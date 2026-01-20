@@ -109,6 +109,55 @@ export function DashboardContent({ username }: DashboardContentProps) {
           </div>
 
           <div className={styles.sections}>
+            <div className={styles.sectionWide}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>Active Projects</h2>
+                <Link href="/repositories?status=active" className={styles.sectionLink}>
+                  View all
+                </Link>
+              </div>
+              <div className={styles.sectionContent}>
+                {data?.activeProjects?.length ? (
+                  <div className={styles.projectGrid}>
+                    {data.activeProjects.map((repo) => (
+                      <a
+                        key={repo.id}
+                        href={repo.htmlUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.projectCard}
+                      >
+                        <div className={styles.projectHeader}>
+                          <span className={styles.projectName}>{repo.name}</span>
+                          {repo.language && (
+                            <span className={styles.projectLang}>{repo.language}</span>
+                          )}
+                        </div>
+                        {repo.description && (
+                          <p className={styles.projectDesc}>{repo.description}</p>
+                        )}
+                        <div className={styles.projectMeta}>
+                          <span className={`${styles.statusDot} ${styles[`dot${repo.status.charAt(0).toUpperCase() + repo.status.slice(1)}`]}`} />
+                          <span className={styles.projectDate}>
+                            {repo.pushedAt
+                              ? `Updated ${formatDate(repo.pushedAt)}`
+                              : "No recent activity"}
+                          </span>
+                          {(repo.stargazersCount ?? 0) > 0 && (
+                            <span className={styles.projectStars}>
+                              {repo.stargazersCount}
+                            </span>
+                          )}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={styles.emptyText}>No active projects yet</p>
+                )}
+              </div>
+            </div>
+
             <div className={styles.section}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>Status Distribution</h2>
