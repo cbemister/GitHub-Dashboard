@@ -1,74 +1,71 @@
 import {
-  pgTable,
-  serial,
-  varchar,
+  sqliteTable,
   text,
-  timestamp,
   integer,
-  boolean,
-  pgEnum,
-  jsonb,
   index,
   uniqueIndex,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+} from "drizzle-orm/sqlite-core";
+import { relations, sql } from "drizzle-orm";
 
-// Enums
-export const repoStatusEnum = pgEnum("repo_status", [
-  "active", // Recent commits, open issues being addressed
-  "maintained", // Occasional updates, stable
-  "stale", // No recent activity (30-90 days)
-  "abandoned", // No activity for 90+ days
-  "archived", // Officially archived on GitHub
-  "deprecated", // Marked for deletion/archive by user
-]);
+// Status and action type values (SQLite doesn't support enums)
+export const REPO_STATUS_VALUES = [
+  "active",
+  "maintained",
+  "stale",
+  "abandoned",
+  "archived",
+  "deprecated",
+] as const;
 
-export const actionTypeEnum = pgEnum("action_type", [
+export const ACTION_TYPE_VALUES = [
   "archive",
   "delete",
   "review",
   "keep",
   "transfer",
-]);
+] as const;
+
+export type RepoStatus = (typeof REPO_STATUS_VALUES)[number];
+export type ActionType = (typeof ACTION_TYPE_VALUES)[number];
 
 // Users table
-export const users = pgTable(
+export const users = sqliteTable(
   "users",
   {
-    id: serial("id").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
     githubId: integer("github_id").notNull().unique(),
-    username: varchar("username", { length: 255 }).notNull(),
-    email: varchar("email", { length: 255 }),
+    username: text("username", { length: 255 }).notNull(),
+    email: text("email", { length: 255 }),
     avatarUrl: text("avatar_url"),
     accessToken: text("access_token").notNull(),
     refreshToken: text("refresh_token"),
-    tokenExpiresAt: timestamp("token_expires_at"),
-    lastSyncAt: timestamp("last_sync_at"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    tokenExpiresAt: integer("token_expires_at", { mode: "timestamp" }),
+    lastSyncAt: integer("last_sync_at", { mode: "timestamp" }),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [uniqueIndex("users_github_id_idx").on(table.githubId)]
 );
 
 // Repositories table
-export const repositories = pgTable(
+export const repositories = sqliteTable(
   "repositories",
   {
-    id: serial("id").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
     userId: integer("user_id")
       .references(() => users.id)
       .notNull(),
     githubId: integer("github_id").notNull(),
-    name: varchar("name", { length: 255 }).notNull(),
-    fullName: varchar("full_name", { length: 512 }).notNull(),
+    name: text("name", { length: 255 }).notNull(),
+    fullName: text("full_name", { length: 512 }).notNull(),
     description: text("description"),
     htmlUrl: text("html_url").notNull(),
 
     // Ownership
-    isPrivate: boolean("is_private").default(false),
-    isFork: boolean("is_fork").default(false),
-    isArchived: boolean("is_archived").default(false),
-    isTemplate: boolean("is_template").default(false),
+    isPrivate: integer("is_private", { mode: "boolean" }).default(false),
+    isFork: integer("is_fork", { mode: "boolean" }).default(false),
+    isArchived: integer("is_archived", { mode: "boolean" }).default(false),
+    isTemplate: integer("is_template", { mode: "boolean" }).default(false),
 
     // Metrics from GitHub
     stargazersCount: integer("stargazers_count").default(0),
@@ -77,30 +74,30 @@ export const repositories = pgTable(
     openIssuesCount: integer("open_issues_count").default(0),
 
     // Language and topics
-    language: varchar("language", { length: 100 }),
-    topics: jsonb("topics").$type<string[]>().default([]),
+    language: text("language", { length: 100 }),
+    topics: text("topics", { mode: "json" }).$type<string[]>().default([]),
 
     // Activity timestamps
-    createdAtGithub: timestamp("created_at_github"),
-    updatedAtGithub: timestamp("updated_at_github"),
-    pushedAt: timestamp("pushed_at"),
+    createdAtGithub: integer("created_at_github", { mode: "timestamp" }),
+    updatedAtGithub: integer("updated_at_github", { mode: "timestamp" }),
+    pushedAt: integer("pushed_at", { mode: "timestamp" }),
 
-    // Calculated fields
-    status: repoStatusEnum("status").default("active"),
+    // Calculated fields (using text for enum-like values)
+    status: text("status", { length: 20 }).$type<RepoStatus>().default("active"),
     priorityScore: integer("priority_score").default(50),
     healthScore: integer("health_score").default(50),
 
     // User-defined fields
-    userStatus: repoStatusEnum("user_status"),
-    plannedAction: actionTypeEnum("planned_action"),
-    actionDeadline: timestamp("action_deadline"),
+    userStatus: text("user_status", { length: 20 }).$type<RepoStatus>(),
+    plannedAction: text("planned_action", { length: 20 }).$type<ActionType>(),
+    actionDeadline: integer("action_deadline", { mode: "timestamp" }),
 
     // Sync tracking
-    lastSyncAt: timestamp("last_sync_at"),
+    lastSyncAt: integer("last_sync_at", { mode: "timestamp" }),
     syncError: text("sync_error"),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [
     index("repos_user_id_idx").on(table.userId),
@@ -111,10 +108,10 @@ export const repositories = pgTable(
 );
 
 // Repository notes/comments
-export const repositoryNotes = pgTable(
+export const repositoryNotes = sqliteTable(
   "repository_notes",
   {
-    id: serial("id").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
     repositoryId: integer("repository_id")
       .references(() => repositories.id)
       .notNull(),
@@ -122,27 +119,27 @@ export const repositoryNotes = pgTable(
       .references(() => users.id)
       .notNull(),
     content: text("content").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [index("notes_repo_id_idx").on(table.repositoryId)]
 );
 
 // Repository activity snapshots (for trend analysis)
-export const repositorySnapshots = pgTable(
+export const repositorySnapshots = sqliteTable(
   "repository_snapshots",
   {
-    id: serial("id").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
     repositoryId: integer("repository_id")
       .references(() => repositories.id)
       .notNull(),
-    snapshotDate: timestamp("snapshot_date").notNull(),
+    snapshotDate: integer("snapshot_date", { mode: "timestamp" }).notNull(),
     stargazersCount: integer("stargazers_count"),
     forksCount: integer("forks_count"),
     openIssuesCount: integer("open_issues_count"),
     commitCount: integer("commit_count"),
     contributorCount: integer("contributor_count"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [
     index("snapshots_repo_date_idx").on(table.repositoryId, table.snapshotDate),
@@ -150,15 +147,15 @@ export const repositorySnapshots = pgTable(
 );
 
 // User sessions
-export const sessions = pgTable(
+export const sessions = sqliteTable(
   "sessions",
   {
-    id: varchar("id", { length: 255 }).primaryKey(),
+    id: text("id", { length: 255 }).primaryKey(),
     userId: integer("user_id")
       .references(() => users.id)
       .notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [
     index("sessions_user_id_idx").on(table.userId),
@@ -167,15 +164,15 @@ export const sessions = pgTable(
 );
 
 // Action log for audit trail
-export const actionLogs = pgTable("action_logs", {
-  id: serial("id").primaryKey(),
+export const actionLogs = sqliteTable("action_logs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
   repositoryId: integer("repository_id").references(() => repositories.id),
-  action: varchar("action", { length: 100 }).notNull(),
-  details: jsonb("details"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  action: text("action", { length: 100 }).notNull(),
+  details: text("details", { mode: "json" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
 });
 
 // Relations
@@ -242,5 +239,3 @@ export type NewRepository = typeof repositories.$inferInsert;
 export type RepositoryNote = typeof repositoryNotes.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type ActionLog = typeof actionLogs.$inferSelect;
-export type RepoStatus = (typeof repoStatusEnum.enumValues)[number];
-export type ActionType = (typeof actionTypeEnum.enumValues)[number];

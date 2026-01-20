@@ -1,20 +1,39 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import * as schema from "./schema";
+import path from "path";
+import fs from "fs";
 
-let sql: ReturnType<typeof postgres> | null = null;
+let sqlite: Database.Database | null = null;
 let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
+
+function getDbPath(): string {
+  // In production Electron app, use app data directory
+  // In development, use project root
+  const dbDir = process.env.DATABASE_DIR || process.cwd();
+  const dbPath = path.join(dbDir, "github-dashboard.db");
+
+  // Ensure directory exists
+  const dir = path.dirname(dbPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  return dbPath;
+}
 
 function getDb() {
   if (!database) {
-    const connectionString = process.env.DATABASE_URL;
+    const dbPath = getDbPath();
+    console.log(`Opening SQLite database at: ${dbPath}`);
 
-    if (!connectionString) {
-      throw new Error("DATABASE_URL environment variable is not set");
-    }
+    sqlite = new Database(dbPath);
 
-    sql = postgres(connectionString);
-    database = drizzle(sql, { schema });
+    // Enable WAL mode for better concurrent access
+    sqlite.pragma("journal_mode = WAL");
+    sqlite.pragma("foreign_keys = ON");
+
+    database = drizzle(sqlite, { schema });
   }
 
   return database;
@@ -31,5 +50,19 @@ export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
     return value;
   },
 });
+
+// Export function to close database (useful for cleanup)
+export function closeDb() {
+  if (sqlite) {
+    sqlite.close();
+    sqlite = null;
+    database = null;
+  }
+}
+
+// Export function to get the database path
+export function getDatabasePath() {
+  return getDbPath();
+}
 
 export * from "./schema";

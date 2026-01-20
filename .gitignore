@@ -43,3 +43,17 @@ next-env.d.ts
 .vscode
 .claude*
 CLAUDE.md
+
+# Electron
+/dist-electron
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.exe
+*.snap
+
+# SQLite database
+*.db
+*.db-wal
+*.db-shm

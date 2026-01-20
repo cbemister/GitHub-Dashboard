@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Electron compatibility - ensure proper asset handling
+  assetPrefix: process.env.ELECTRON_BUILD === 'true' ? '' : undefined,
+  // Ensure server actions work in Electron
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['localhost:3000'],
+    },
+  },
 };
 
 export default nextConfig;
