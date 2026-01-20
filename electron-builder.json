@@ -13,12 +13,8 @@
     "node_modules/**/*",
     "package.json"
   ],
-  "extraResources": [
-    {
-      "from": ".env",
-      "to": ".env",
-      "filter": ["**/*"]
-    }
+  "asarUnpack": [
+    "node_modules/better-sqlite3/**/*"
   ],
   "mac": {
     "category": "public.app-category.developer-tools",

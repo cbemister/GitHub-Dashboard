@@ -7,6 +7,13 @@ const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
 let mainWindow;
 let nextServer;
 
+// Set up database directory for SQLite
+function setupDatabaseDir() {
+  const userDataPath = app.getPath('userData');
+  process.env.DATABASE_DIR = userDataPath;
+  console.log(`Database directory set to: ${userDataPath}`);
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -17,7 +24,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true,
+      sandbox: false, // Required for native modules like better-sqlite3
     },
     titleBarStyle: 'default',
     show: false,
@@ -95,12 +102,15 @@ async function startProductionServer() {
   const serverUrl = `http://localhost:${serverPort}`;
 
   // Start the Next.js server
-  const nextPath = path.join(__dirname, '..', 'node_modules', '.bin', 'next');
   const appPath = path.join(__dirname, '..');
 
   nextServer = spawn(process.platform === 'win32' ? 'next.cmd' : 'next', ['start', '-p', serverPort.toString()], {
     cwd: appPath,
-    env: { ...process.env, NODE_ENV: 'production' },
+    env: {
+      ...process.env,
+      NODE_ENV: 'production',
+      DATABASE_DIR: app.getPath('userData'),
+    },
     stdio: 'pipe',
   });
 
@@ -141,6 +151,7 @@ async function startProductionServer() {
 
 // App lifecycle handlers
 app.whenReady().then(() => {
+  setupDatabaseDir();
   createWindow();
 
   app.on('activate', () => {
@@ -174,4 +185,8 @@ ipcMain.handle('get-platform', () => {
 
 ipcMain.handle('open-external', async (event, url) => {
   await shell.openExternal(url);
+});
+
+ipcMain.handle('get-database-path', () => {
+  return path.join(app.getPath('userData'), 'github-dashboard.db');
 });

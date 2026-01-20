@@ -52,3 +52,8 @@ CLAUDE.md
 *.rpm
 *.exe
 *.snap
+
+# SQLite database
+*.db
+*.db-wal
+*.db-shm
