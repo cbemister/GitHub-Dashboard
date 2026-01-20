@@ -5,6 +5,7 @@ export function createGitHubClient(accessToken: string): Octokit {
     auth: accessToken,
     userAgent: "github-repo-dashboard/1.0",
     timeZone: "UTC",
+    previews: ["mercy"], // Required for topics to be included in responses
   });
 }
 
