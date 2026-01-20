@@ -1,1 +1,0 @@
-export { IssuesContent } from "./IssuesContent";

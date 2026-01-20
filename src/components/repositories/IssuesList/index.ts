@@ -1,1 +1,0 @@
-export { IssuesList } from "./IssuesList";

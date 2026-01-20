@@ -1,0 +1,194 @@
+.container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  color: var(--color-foreground-secondary);
+  text-decoration: none;
+  margin-bottom: var(--spacing-4);
+  font-size: var(--font-size-sm);
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+.header {
+  margin-bottom: var(--spacing-6);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-foreground);
+}
+
+.status {
+  font-size: var(--font-size-sm);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-medium);
+}
+
+.status.active {
+  background-color: var(--color-status-active-bg);
+  color: var(--color-status-active);
+}
+
+.status.maintained {
+  background-color: var(--color-status-maintained-bg);
+  color: var(--color-status-maintained);
+}
+
+.status.stale {
+  background-color: var(--color-status-stale-bg);
+  color: var(--color-status-stale);
+}
+
+.status.abandoned {
+  background-color: var(--color-status-abandoned-bg);
+  color: var(--color-status-abandoned);
+}
+
+.status.archived {
+  background-color: var(--color-status-archived-bg);
+  color: var(--color-status-archived);
+}
+
+.description {
+  font-size: var(--font-size-lg);
+  color: var(--color-foreground-secondary);
+  margin-bottom: var(--spacing-3);
+}
+
+.githubLink {
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.statCard {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  text-align: center;
+}
+
+.statValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-foreground);
+}
+
+.statLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-foreground-secondary);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.infoCard {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+}
+
+.infoTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground);
+  margin-bottom: var(--spacing-3);
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoItem dt {
+  color: var(--color-foreground-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.infoItem dd {
+  color: var(--color-foreground);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.topicsSection {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.topic {
+  background-color: var(--color-primary-muted);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.homepageSection {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+}
+
+.homepageLink {
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+}
+
+.loading,
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-foreground-secondary);
+  gap: var(--spacing-4);
+}
+
+.notFound a {
+  color: var(--color-primary);
+}

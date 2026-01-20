@@ -1,20 +1,21 @@
 # GitHub Repository Dashboard
 
-A web application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
+A desktop application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black)
+![Electron](https://img.shields.io/badge/Electron-33-47848F)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57)
+![React](https://img.shields.io/badge/React-19-61DAFB)
 
 ## Features
 
 - **Repository Status Tracking** - Automatically classifies repos as active, maintained, stale, abandoned, or archived based on activity
 - **Priority Scoring** - Identifies which repositories need attention with weighted scoring algorithm
 - **Health Scoring** - Measures overall repository health based on activity, issues, and engagement
-- **Repository Analysis** - Visualize language distribution, detect tech stacks, and identify project themes
+- **Repository Analysis** - Visualize language distribution and status breakdown
 - **Cleanup Recommendations** - AI-powered suggestions for archiving, deleting, or reviewing repos
-- **Auto-Generate Topics** - Automatically generate and apply GitHub topics based on repo analysis
-- **Active Projects Dashboard** - Quick access to your most recently active repositories
+- **Local Data Storage** - All data stored locally in SQLite, no external database required
+- **Cross-Platform** - Works on Windows, macOS, and Linux
 
 ## Screenshots
 
@@ -25,8 +26,7 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 ### Prerequisites
 
 - Node.js 18+
-- Docker (for local PostgreSQL)
-- GitHub OAuth App credentials
+- GitHub Personal Access Token
 
 ### Installation
 
@@ -41,121 +41,116 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
    npm install
    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` with your values:
-   ```env
-   DATABASE_URL="postgresql://dashboard:dashboard_password@localhost:5434/gh_dashboard"
-   GITHUB_CLIENT_ID="your_github_client_id"
-   GITHUB_CLIENT_SECRET="your_github_client_secret"
-   NEXT_PUBLIC_APP_URL="http://localhost:3000"
-   SESSION_SECRET="generate-a-secure-random-string"
-   ```
-
-4. **Create a GitHub OAuth App**
-   - Go to [GitHub Developer Settings](https://github.com/settings/developers)
-   - Click "New OAuth App"
-   - Set Authorization callback URL to `http://localhost:3000/api/auth/callback`
-   - Copy Client ID and Client Secret to your `.env` file
-
-5. **Start the database**
-   ```bash
-   docker-compose up -d
-   ```
-
-6. **Push the database schema**
-   ```bash
-   npm run db:push
-   ```
-
-7. **Start the development server**
+3. **Start the development server**
    ```bash
    npm run dev
    ```
 
-8. **Open the app**
-
-   Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub.
+4. **Create a GitHub Personal Access Token**
+   - Go to [GitHub Settings > Developer Settings > Personal Access Tokens](https://github.com/settings/tokens)
+   - Click "Generate new token (classic)"
+   - Select the `repo` scope for full repository access
+   - Copy the token and use it to sign in to the app
 
 ## Usage
+
+### Login
+
+Enter your GitHub Personal Access Token to authenticate. The token is stored securely in the local SQLite database.
 
 ### Dashboard
 
 The main dashboard shows:
-- Total repository count with public/private breakdown
-- Status distribution (active, maintained, stale, abandoned, archived)
-- Active projects grid with recent updates
-- Top priority repositories that need attention
+- Total repository count with status breakdown
+- Active, stale, and abandoned repository counts
+- Total stars and open issues
+- Recently updated repositories
+
+Click "Sync Repositories" to fetch your latest repositories from GitHub.
 
 ### Repositories
 
 Browse all your repositories with:
-- Filter by status, language, visibility
+- Filter by status (active, maintained, stale, abandoned, archived)
+- Filter by programming language
 - Search by name or description
-- Sort by priority score, health score, stars, or last updated
-- View detailed information for each repository
+- View priority and health scores
 
 ### Analysis
 
 Explore patterns across your repositories:
-- **Languages** - Distribution of programming languages
-- **Topics** - GitHub topics (with auto-generate feature)
-- **Tech Stack** - Detected frameworks, databases, and tools
-- **Themes** - Project categories (web apps, CLIs, APIs, etc.)
+- Language distribution chart
+- Status distribution chart
+- Summary statistics
+- Top repositories by stars
 
 ### Insights
 
-Get AI-powered recommendations:
+Get recommendations for repository cleanup:
 - Repositories to archive (inactive, low engagement)
 - Repositories to review (stale but potentially valuable)
-- Repositories to keep (active, healthy)
+- Repositories to delete (abandoned forks with no stars)
+
+### Issues
+
+View open issues across all your repositories:
+- Filter by created/assigned to you
+- Quick links to GitHub
 
 ### Settings
 
-- View your profile
-- Generate topics for all repositories
+- View account information
+- Export your data as JSON
+- Clear all synced data
+- View app version info
 - Sign out
 
 ## Tech Stack
 
-- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
+- **Framework**: [Electron](https://www.electronjs.org/) 33
+- **UI**: [React](https://reactjs.org/) 19 with [React Router](https://reactrouter.com/)
+- **Build Tool**: [Vite](https://vitejs.dev/) with vite-plugin-electron
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Drizzle ORM](https://orm.drizzle.team/)
-- **Authentication**: GitHub OAuth 2.0
-- **Styling**: CSS Modules
+- **Database**: [SQLite](https://www.sqlite.org/) with [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
+- **Styling**: CSS Modules with CSS Variables
 - **GitHub API**: [@octokit/rest](https://github.com/octokit/rest.js)
 
 ## Project Structure
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # Auth pages (login)
-│   ├── (dashboard)/       # Protected dashboard pages
-│   └── api/               # API routes
-├── components/            # React components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Business logic
-│   ├── auth/             # Session management
-│   ├── db/               # Database schema
-│   ├── github/           # GitHub API client
-│   ├── analysis/         # Repository analysis
-│   └── scoring/          # Priority/health scoring
-└── types/                 # TypeScript types
+├── electron/                # Electron main process
+│   ├── main.ts             # Main entry point
+│   ├── preload.ts          # Context bridge (IPC)
+│   └── database.ts         # SQLite initialization
+├── src/
+│   ├── App.tsx             # Main React app with routing
+│   ├── main.tsx            # React entry point
+│   ├── pages/              # Page components
+│   │   ├── Dashboard.tsx
+│   │   ├── Repositories.tsx
+│   │   ├── RepositoryDetail.tsx
+│   │   ├── Analysis.tsx
+│   │   ├── Insights.tsx
+│   │   ├── Issues.tsx
+│   │   ├── Settings.tsx
+│   │   └── Login.tsx
+│   ├── components/         # Reusable components
+│   │   └── layout/
+│   ├── styles/             # CSS styles
+│   └── types/              # TypeScript types
+├── index.html              # HTML entry point
+├── vite.config.ts          # Vite configuration
+└── package.json
 ```
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
+| `npm run dev` | Start Vite dev server (renderer only) |
+| `npm run electron:dev` | Start full Electron app in dev mode |
 | `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run db:push` | Push schema to database |
-| `npm run db:studio` | Open Drizzle Studio |
+| `npm run lint` | Run ESLint |
 
 ## Repository Status Definitions
 
@@ -166,6 +161,13 @@ src/
 | **Stale** | No push in 30-90 days |
 | **Abandoned** | No push in 90+ days |
 | **Archived** | Archived on GitHub |
+
+## Data Storage
+
+All data is stored locally in an SQLite database:
+- **Windows**: `%APPDATA%/github-dashboard/github-dashboard.db`
+- **macOS**: `~/Library/Application Support/github-dashboard/github-dashboard.db`
+- **Linux**: `~/.config/github-dashboard/github-dashboard.db`
 
 ## Contributing
 

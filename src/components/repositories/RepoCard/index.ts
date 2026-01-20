@@ -1,1 +1,0 @@
-export { RepoCard } from "./RepoCard";

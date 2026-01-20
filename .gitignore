@@ -7,12 +7,10 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
+# production builds
+/dist
+/dist-electron
+/release
 
 # misc
 .DS_Store
@@ -28,18 +26,24 @@ yarn-error.log*
 .env
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
-next-env.d.ts
-
-# drizzle
-/src/lib/db/migrations/meta
 
 # IDE
 .idea
 .vscode
 .claude*
 CLAUDE.md
+
+# Electron
+*.db
+*.db-journal
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
