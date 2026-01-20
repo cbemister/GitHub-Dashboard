@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connection Error - GitHub Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 500px;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #e94560;
+    }
+
+    p {
+      color: #a0a0a0;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .retry-btn {
+      background: #e94560;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .retry-btn:hover {
+      background: #d63050;
+    }
+
+    .tips {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .tips h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .tips ul {
+      font-size: 0.8rem;
+      color: #a0a0a0;
+      padding-left: 1.25rem;
+    }
+
+    .tips li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-icon">:(</div>
+    <h1>Unable to Connect</h1>
+    <p>
+      The GitHub Dashboard application couldn't start properly.
+      This usually means the server failed to initialize.
+    </p>
+    <button class="retry-btn" onclick="location.reload()">Retry Connection</button>
+    <div class="tips">
+      <h3>Troubleshooting tips:</h3>
+      <ul>
+        <li>Make sure the application was installed correctly</li>
+        <li>Check if another instance is already running</li>
+        <li>Try restarting the application</li>
+        <li>Check application logs for more details</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
