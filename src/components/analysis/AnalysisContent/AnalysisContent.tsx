@@ -225,7 +225,7 @@ export function AnalysisContent() {
             </div>
             <div className={styles.section}>
               <h3 className={styles.sectionTitle}>Topics</h3>
-              <TopicCloud topics={data.topicGroups} />
+              <TopicCloud topics={data.topicGroups} onTopicsGenerated={fetchAnalysis} />
             </div>
           </div>
         )}

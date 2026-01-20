@@ -3,6 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { db, repositories } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { RepoStatusBadge } from "@/components/repositories/RepoStatusBadge";
+import { IssuesList } from "@/components/repositories/IssuesList";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -199,6 +200,13 @@ export default async function RepositoryDetailPage({ params }: PageProps) {
           </dl>
         </div>
       </div>
+
+      {(repo.openIssuesCount ?? 0) > 0 && (
+        <div className={styles.cardFullWidth}>
+          <h2 className={styles.cardTitle}>Open Issues</h2>
+          <IssuesList repositoryId={repo.id} />
+        </div>
+      )}
     </div>
   );
 }

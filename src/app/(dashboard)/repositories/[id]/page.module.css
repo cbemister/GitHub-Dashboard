@@ -112,6 +112,20 @@
   padding: var(--spacing-4);
 }
 
+.cardFullWidth {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+@media (min-width: 768px) {
+  .cardFullWidth {
+    grid-column: 1 / -1;
+  }
+}
+
 .cardTitle {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
