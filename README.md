@@ -1,10 +1,11 @@
 # GitHub Repository Dashboard
 
-A web application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
+A self-contained desktop application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)
+![Electron](https://img.shields.io/badge/Electron-40-47848F)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57)
 
 ## Features
 
@@ -15,6 +16,7 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 - **Cleanup Recommendations** - AI-powered suggestions for archiving, deleting, or reviewing repos
 - **Auto-Generate Topics** - Automatically generate and apply GitHub topics based on repo analysis
 - **Active Projects Dashboard** - Quick access to your most recently active repositories
+- **Self-Contained Desktop App** - No external database required; all data stored locally with SQLite
 
 ## Screenshots
 
@@ -25,7 +27,6 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 ### Prerequisites
 
 - Node.js 18+
-- Docker (for local PostgreSQL)
 - GitHub OAuth App credentials
 
 ### Installation
@@ -48,7 +49,6 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 
    Edit `.env` with your values:
    ```env
-   DATABASE_URL="postgresql://dashboard:dashboard_password@localhost:5434/gh_dashboard"
    GITHUB_CLIENT_ID="your_github_client_id"
    GITHUB_CLIENT_SECRET="your_github_client_secret"
    NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -61,24 +61,43 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
    - Set Authorization callback URL to `http://localhost:3000/api/auth/callback`
    - Copy Client ID and Client Secret to your `.env` file
 
-5. **Start the database**
-   ```bash
-   docker-compose up -d
-   ```
-
-6. **Push the database schema**
+5. **Initialize the database**
    ```bash
    npm run db:push
    ```
 
-7. **Start the development server**
+6. **Start the application**
+
+   For development (web mode):
    ```bash
    npm run dev
    ```
 
-8. **Open the app**
+   For development (desktop mode):
+   ```bash
+   npm run electron:dev
+   ```
 
-   Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub.
+7. **Open the app**
+
+   - Web mode: Visit [http://localhost:3000](http://localhost:3000)
+   - Desktop mode: The Electron window opens automatically
+
+## Building for Production
+
+Build the desktop application for your platform:
+
+```bash
+# Build for current platform
+npm run electron:build
+
+# Build for specific platforms
+npm run electron:build:win    # Windows (NSIS installer + portable)
+npm run electron:build:mac    # macOS (DMG + ZIP, x64 + arm64)
+npm run electron:build:linux  # Linux (AppImage, DEB, RPM)
+```
+
+Built applications are output to the `dist-electron` directory.
 
 ## Usage
 
@@ -123,39 +142,64 @@ Get AI-powered recommendations:
 
 - **Framework**: [Next.js 16](https://nextjs.org/) with App Router
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Drizzle ORM](https://orm.drizzle.team/)
+- **Desktop**: [Electron 40](https://www.electronjs.org/) for cross-platform desktop support
+- **Database**: [SQLite](https://www.sqlite.org/) with [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) and [Drizzle ORM](https://orm.drizzle.team/)
 - **Authentication**: GitHub OAuth 2.0
 - **Styling**: CSS Modules
 - **GitHub API**: [@octokit/rest](https://github.com/octokit/rest.js)
 
+## Data Storage
+
+The application uses SQLite for local data storage:
+
+- **Development**: Database stored at `./github-dashboard.db` in the project root
+- **Production (Desktop)**: Database stored in the user's app data directory:
+  - Windows: `%APPDATA%/github-dashboard/github-dashboard.db`
+  - macOS: `~/Library/Application Support/github-dashboard/github-dashboard.db`
+  - Linux: `~/.config/github-dashboard/github-dashboard.db`
+
+SQLite with WAL mode ensures reliable concurrent access and data integrity.
+
 ## Project Structure
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # Auth pages (login)
-│   ├── (dashboard)/       # Protected dashboard pages
-│   └── api/               # API routes
-├── components/            # React components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Business logic
-│   ├── auth/             # Session management
-│   ├── db/               # Database schema
-│   ├── github/           # GitHub API client
-│   ├── analysis/         # Repository analysis
-│   └── scoring/          # Priority/health scoring
-└── types/                 # TypeScript types
+├── electron/                  # Electron main process
+│   ├── main.js               # Main process entry point
+│   └── preload.js            # Preload script for IPC
+├── src/
+│   ├── app/                  # Next.js App Router
+│   │   ├── (auth)/          # Auth pages (login)
+│   │   ├── (dashboard)/     # Protected dashboard pages
+│   │   └── api/             # API routes
+│   ├── components/          # React components
+│   ├── hooks/               # Custom React hooks
+│   ├── lib/                 # Business logic
+│   │   ├── auth/           # Session management
+│   │   ├── db/             # Database schema (SQLite)
+│   │   ├── github/         # GitHub API client
+│   │   ├── analysis/       # Repository analysis
+│   │   └── scoring/        # Priority/health scoring
+│   └── types/               # TypeScript types
+├── drizzle.config.ts         # Drizzle ORM configuration
+└── electron-builder.json     # Electron Builder configuration
 ```
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run db:push` | Push schema to database |
+| `npm run dev` | Start Next.js development server |
+| `npm run build` | Build Next.js for production |
+| `npm run start` | Start Next.js production server |
+| `npm run electron:dev` | Start Electron app in development mode |
+| `npm run electron:build` | Build Electron app for current platform |
+| `npm run electron:build:win` | Build Electron app for Windows |
+| `npm run electron:build:mac` | Build Electron app for macOS |
+| `npm run electron:build:linux` | Build Electron app for Linux |
+| `npm run db:push` | Push schema to SQLite database |
 | `npm run db:studio` | Open Drizzle Studio |
+| `npm run db:generate` | Generate database migrations |
+| `npm run db:migrate` | Run database migrations |
 
 ## Repository Status Definitions
 
