@@ -1,0 +1,151 @@
+:root {
+  /* Colors - Light Theme */
+  --color-background: #ffffff;
+  --color-background-secondary: #f6f8fa;
+  --color-background-tertiary: #f0f2f5;
+  --color-foreground: #1f2328;
+  --color-foreground-secondary: #656d76;
+  --color-foreground-muted: #8b949e;
+
+  /* Borders */
+  --color-border: #d0d7de;
+  --color-border-muted: #e6e8eb;
+
+  /* Brand Colors */
+  --color-primary: #0969da;
+  --color-primary-hover: #0550ae;
+  --color-primary-muted: #ddf4ff;
+
+  /* Status Colors */
+  --color-success: #1a7f37;
+  --color-success-muted: #dafbe1;
+  --color-warning: #9a6700;
+  --color-warning-muted: #fff8c5;
+  --color-danger: #cf222e;
+  --color-danger-muted: #ffebe9;
+  --color-info: #0969da;
+  --color-info-muted: #ddf4ff;
+
+  /* Repository Status Colors */
+  --color-status-active: #1a7f37;
+  --color-status-active-bg: #dafbe1;
+  --color-status-maintained: #0969da;
+  --color-status-maintained-bg: #ddf4ff;
+  --color-status-stale: #9a6700;
+  --color-status-stale-bg: #fff8c5;
+  --color-status-abandoned: #cf222e;
+  --color-status-abandoned-bg: #ffebe9;
+  --color-status-archived: #656d76;
+  --color-status-archived-bg: #f0f2f5;
+  --color-status-deprecated: #8b949e;
+  --color-status-deprecated-bg: #f6f8fa;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Spacing */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.04);
+  --shadow-md: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --shadow-lg: 0 8px 24px rgba(140, 149, 159, 0.2);
+  --shadow-xl: 0 12px 28px rgba(140, 149, 159, 0.3);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Z-index */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-tooltip: 400;
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --max-content-width: 1280px;
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0d1117;
+    --color-background-secondary: #161b22;
+    --color-background-tertiary: #21262d;
+    --color-foreground: #e6edf3;
+    --color-foreground-secondary: #8b949e;
+    --color-foreground-muted: #656d76;
+
+    --color-border: #30363d;
+    --color-border-muted: #21262d;
+
+    --color-primary: #58a6ff;
+    --color-primary-hover: #79c0ff;
+    --color-primary-muted: #388bfd26;
+
+    --color-success: #3fb950;
+    --color-success-muted: #2ea04326;
+    --color-warning: #d29922;
+    --color-warning-muted: #bb800926;
+    --color-danger: #f85149;
+    --color-danger-muted: #f8514926;
+    --color-info: #58a6ff;
+    --color-info-muted: #388bfd26;
+
+    --color-status-active: #3fb950;
+    --color-status-active-bg: #2ea04326;
+    --color-status-maintained: #58a6ff;
+    --color-status-maintained-bg: #388bfd26;
+    --color-status-stale: #d29922;
+    --color-status-stale-bg: #bb800926;
+    --color-status-abandoned: #f85149;
+    --color-status-abandoned-bg: #f8514926;
+    --color-status-archived: #8b949e;
+    --color-status-archived-bg: #30363d;
+    --color-status-deprecated: #656d76;
+    --color-status-deprecated-bg: #21262d;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.6);
+  }
+}
