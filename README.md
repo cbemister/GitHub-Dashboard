@@ -4,7 +4,7 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57)
 
 ## Features
 
@@ -25,7 +25,6 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 ### Prerequisites
 
 - Node.js 18+
-- Docker (for local PostgreSQL)
 - GitHub OAuth App credentials
 
 ### Installation
@@ -48,7 +47,6 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 
    Edit `.env` with your values:
    ```env
-   DATABASE_URL="postgresql://dashboard:dashboard_password@localhost:5434/gh_dashboard"
    GITHUB_CLIENT_ID="your_github_client_id"
    GITHUB_CLIENT_SECRET="your_github_client_secret"
    NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -61,22 +59,19 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
    - Set Authorization callback URL to `http://localhost:3000/api/auth/callback`
    - Copy Client ID and Client Secret to your `.env` file
 
-5. **Start the database**
-   ```bash
-   docker-compose up -d
-   ```
-
-6. **Push the database schema**
+5. **Initialize the database**
    ```bash
    npm run db:push
    ```
 
-7. **Start the development server**
+   This creates `github-dashboard.db` in the project root (SQLite, no external database needed).
+
+6. **Start the development server**
    ```bash
    npm run dev
    ```
 
-8. **Open the app**
+7. **Open the app**
 
    Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub.
 
@@ -123,7 +118,7 @@ Get AI-powered recommendations:
 
 - **Framework**: [Next.js 16](https://nextjs.org/) with App Router
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Drizzle ORM](https://orm.drizzle.team/)
+- **Database**: [SQLite](https://sqlite.org/) with [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) and [Drizzle ORM](https://orm.drizzle.team/)
 - **Authentication**: GitHub OAuth 2.0
 - **Styling**: CSS Modules
 - **GitHub API**: [@octokit/rest](https://github.com/octokit/rest.js)
