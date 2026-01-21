@@ -98,14 +98,24 @@
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .dropdownItem:hover {
   background: var(--color-background-secondary);
   text-decoration: none;
+  padding-left: calc(var(--spacing-4) + 2px);
+}
+
+.dropdownItem:active {
+  background: var(--color-background-tertiary);
 }
 
 .dropdownItem svg {
   color: var(--color-foreground-secondary);
+  transition: color var(--transition-fast);
+}
+
+.dropdownItem:hover svg {
+  color: var(--color-foreground);
 }

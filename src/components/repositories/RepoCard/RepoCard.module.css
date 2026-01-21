@@ -2,15 +2,18 @@
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-4);
+  padding: var(--spacing-5);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
-  transition: border-color var(--transition-fast);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-fast);
 }
 
 .card:hover {
-  border-color: var(--color-border-muted);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-card-hover);
+  transform: var(--lift-sm);
 }
 
 .header {
@@ -130,4 +133,12 @@
   font-size: var(--font-size-sm);
   color: var(--color-primary);
   font-weight: var(--font-weight-medium);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.viewLink:hover {
+  background: var(--color-primary-muted);
+  text-decoration: none;
 }

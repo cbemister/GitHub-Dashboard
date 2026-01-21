@@ -23,7 +23,7 @@
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   color: var(--color-foreground-secondary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -35,6 +35,7 @@
   background: var(--color-background-tertiary);
   color: var(--color-foreground);
   text-decoration: none;
+  transform: translateX(2px);
 }
 
 .navItem svg {
@@ -44,9 +45,10 @@
 .navItemActive {
   background: var(--color-background);
   color: var(--color-foreground);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .navItemActive:hover {
   background: var(--color-background);
+  transform: none;
 }

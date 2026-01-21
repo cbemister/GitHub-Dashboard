@@ -6,6 +6,7 @@
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
 
 .searchRow {
@@ -89,12 +90,17 @@
   color: var(--color-danger);
   background: transparent;
   border: none;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .clearButton:hover {
-  opacity: 0.8;
+  background: var(--color-danger-muted);
+}
+
+.clearButton:active {
+  transform: var(--press);
 }
 
 .sort {
@@ -127,4 +133,10 @@
 .sortDirButton:hover {
   background: var(--color-background-tertiary);
   color: var(--color-foreground);
+  border-color: var(--color-border);
+}
+
+.sortDirButton:active {
+  transform: var(--press);
+  background: var(--color-background-secondary);
 }

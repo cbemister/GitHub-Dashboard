@@ -18,15 +18,22 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .button:hover:not(:disabled) {
   background: var(--color-primary-hover);
+  transform: var(--lift-sm);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.button:active:not(:disabled) {
+  transform: var(--press);
+  box-shadow: var(--shadow-button-active);
 }
 
 .button:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
