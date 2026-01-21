@@ -61,7 +61,9 @@ export async function getSession(): Promise<Session | null> {
     .where(and(eq(sessions.id, sessionId), gt(sessions.expiresAt, new Date())))
     .limit(1);
 
-  if (result.length === 0) return null;
+  if (result.length === 0) {
+    return null;
+  }
 
   const { session, user } = result[0];
 

@@ -20,10 +20,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Redirect to dashboard if accessing auth routes with session
-  if (isAuthRoute && sessionCookie) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+  // Don't redirect from login based on cookie alone - let the page validate the session
+  // This prevents redirect loops when cookie exists but session is invalid
 
   return NextResponse.next();
 }

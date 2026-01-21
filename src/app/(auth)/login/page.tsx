@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getSession } from "@/lib/auth/session";
 import styles from "./page.module.css";
 
 interface LoginPageProps {
@@ -14,6 +16,12 @@ const errorMessages: Record<string, string> = {
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
+  // Check if user has a valid session - redirect to dashboard if so
+  const session = await getSession();
+  if (session) {
+    redirect("/dashboard");
+  }
+
   const params = await searchParams;
   const error = params.error;
   const errorMessage = error ? errorMessages[error] || "An error occurred." : null;
