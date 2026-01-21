@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, asc, and, ilike, sql } from "drizzle-orm";
+import { eq, desc, asc, and, like, sql } from "drizzle-orm";
 import { db, repositories } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import type { RepoStatus } from "@/lib/db/schema";
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       conditions.push(
-        ilike(repositories.name, `%${search}%`)
+        like(sql`LOWER(${repositories.name})`, `%${search.toLowerCase()}%`)
       );
     }
 

@@ -1,20 +1,42 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import * as schema from "./schema";
+import path from "path";
+import fs from "fs";
 
-let sql: ReturnType<typeof postgres> | null = null;
+let sqlite: Database.Database | null = null;
 let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
+
+/**
+ * Get the database file path based on environment
+ * - Development: .data folder (excluded from file watching)
+ * - Production/Electron: app data directory
+ */
+function getDatabasePath(): string {
+  // For Electron production builds, use app data directory
+  if (process.env.ELECTRON_APP_DATA_PATH) {
+    return path.join(process.env.ELECTRON_APP_DATA_PATH, "github-dashboard.db");
+  }
+
+  // For development, use .data folder to avoid triggering Fast Refresh
+  const dataDir = path.join(process.cwd(), ".data");
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+
+  return path.join(dataDir, "github-dashboard.db");
+}
 
 function getDb() {
   if (!database) {
-    const connectionString = process.env.DATABASE_URL;
+    const dbPath = getDatabasePath();
 
-    if (!connectionString) {
-      throw new Error("DATABASE_URL environment variable is not set");
-    }
+    // Create SQLite connection with WAL mode for better concurrency
+    sqlite = new Database(dbPath);
+    sqlite.pragma("journal_mode = WAL");
+    sqlite.pragma("foreign_keys = ON");
 
-    sql = postgres(connectionString);
-    database = drizzle(sql, { schema });
+    database = drizzle(sqlite, { schema });
   }
 
   return database;
@@ -31,5 +53,14 @@ export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
     return value;
   },
 });
+
+// Export function to close database connection (useful for Electron app lifecycle)
+export function closeDatabase() {
+  if (sqlite) {
+    sqlite.close();
+    sqlite = null;
+    database = null;
+  }
+}
 
 export * from "./schema";
