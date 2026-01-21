@@ -10,12 +10,12 @@
 .card {
   background: var(--color-background);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-10);
   width: 100%;
   max-width: 400px;
   text-align: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
 }
 
 .logo {
@@ -48,15 +48,21 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   text-decoration: none;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .button:hover {
-  opacity: 0.9;
+  transform: var(--lift-sm);
+  box-shadow: var(--shadow-lg);
   text-decoration: none;
+}
+
+.button:active {
+  transform: var(--press);
+  box-shadow: var(--shadow-sm);
 }
 
 .error {
@@ -77,10 +83,15 @@
 .backLink {
   display: inline-block;
   margin-top: var(--spacing-4);
+  padding: var(--spacing-1) var(--spacing-2);
   font-size: var(--font-size-sm);
   color: var(--color-foreground-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
 }
 
 .backLink:hover {
   color: var(--color-primary);
+  background: var(--color-primary-muted);
+  text-decoration: none;
 }
