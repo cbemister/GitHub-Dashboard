@@ -34,6 +34,17 @@ a:hover {
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Interactive element transitions */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all var(--transition-fast);
 }
 
 code,
@@ -48,8 +59,16 @@ img {
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--focus-ring-offset), var(--focus-ring);
+}
+
+/* For elements that shouldn't have focus ring offset (inputs with borders) */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: var(--focus-ring);
+  border-color: var(--color-primary);
 }
 
 /* Utility classes */
