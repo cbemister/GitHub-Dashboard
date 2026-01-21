@@ -40,11 +40,24 @@ interface TopPriorityRepo {
   language: string | null;
 }
 
+interface ActiveProject {
+  id: number;
+  name: string;
+  fullName: string;
+  description: string | null;
+  status: string;
+  language: string | null;
+  stargazersCount: number;
+  pushedAt: string | null;
+  htmlUrl: string;
+}
+
 interface StatsData {
   stats: Stats;
   statusDistribution: StatusDistribution[];
   languageDistribution: LanguageDistribution[];
   topPriorityRepos: TopPriorityRepo[];
+  activeProjects: ActiveProject[];
 }
 
 export function useStats() {
