@@ -1,7 +1,8 @@
 # GitHub Repository Dashboard
 
-A web application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
+A desktop application to manage, analyze, and organize your GitHub repositories. Track repository status, identify projects that need attention, and get insights into your codebase portfolio.
 
+![Electron](https://img.shields.io/badge/Electron-40-47848F)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
 ![SQLite](https://img.shields.io/badge/SQLite-3-003B57)
@@ -66,14 +67,18 @@ A web application to manage, analyze, and organize your GitHub repositories. Tra
 
    This creates `github-dashboard.db` in the project root (SQLite, no external database needed).
 
-6. **Start the development server**
+6. **Start the desktop app**
+   ```bash
+   npm run electron:start
+   ```
+
+   This starts both the Next.js dev server and the Electron app.
+
+   *Alternative: Web-only development*
    ```bash
    npm run dev
    ```
-
-7. **Open the app**
-
-   Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub.
+   Then visit [http://localhost:3000](http://localhost:3000).
 
 ## Usage
 
@@ -116,6 +121,7 @@ Get AI-powered recommendations:
 
 ## Tech Stack
 
+- **Desktop**: [Electron 40](https://www.electronjs.org/)
 - **Framework**: [Next.js 16](https://nextjs.org/) with App Router
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Database**: [SQLite](https://sqlite.org/) with [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) and [Drizzle ORM](https://orm.drizzle.team/)
@@ -126,29 +132,38 @@ Get AI-powered recommendations:
 ## Project Structure
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # Auth pages (login)
-│   ├── (dashboard)/       # Protected dashboard pages
-│   └── api/               # API routes
-├── components/            # React components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Business logic
-│   ├── auth/             # Session management
-│   ├── db/               # Database schema
-│   ├── github/           # GitHub API client
-│   ├── analysis/         # Repository analysis
-│   └── scoring/          # Priority/health scoring
-└── types/                 # TypeScript types
+├── electron/               # Electron main process
+│   ├── main.js            # Main process entry
+│   ├── preload.js         # Secure IPC bridge
+│   └── error.html         # Fallback error page
+└── src/
+    ├── app/               # Next.js App Router
+    │   ├── (auth)/        # Auth pages (login)
+    │   ├── (dashboard)/   # Protected dashboard pages
+    │   └── api/           # API routes
+    ├── components/        # React components
+    ├── hooks/             # Custom React hooks
+    ├── lib/               # Business logic
+    │   ├── auth/          # Session management
+    │   ├── db/            # Database schema
+    │   ├── electron.ts    # Electron IPC utilities
+    │   ├── github/        # GitHub API client
+    │   ├── analysis/      # Repository analysis
+    │   └── scoring/       # Priority/health scoring
+    └── types/             # TypeScript types
 ```
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
+| `npm run electron:start` | Start Electron app in development |
+| `npm run electron:build` | Build for current platform |
+| `npm run electron:build:win` | Build Windows installer |
+| `npm run electron:build:mac` | Build macOS installer |
+| `npm run electron:build:linux` | Build Linux package |
+| `npm run dev` | Start Next.js dev server only |
+| `npm run build` | Build Next.js for production |
 | `npm run db:push` | Push schema to database |
 | `npm run db:studio` | Open Drizzle Studio |
 
